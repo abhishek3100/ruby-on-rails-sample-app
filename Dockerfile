@@ -4,12 +4,6 @@ RUN apt-get update && \
     apt-get install -y build-essential libcurl4-openssl-dev libxml2-dev libsqlite3-dev libpq-dev nodejs postgresql-client sqlite3 --no-install-recommends && \ 
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
-
-# throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
-
-
 ENV APP_PATH /usr/src/app
 
 RUN mkdir -p $APP_PATH
@@ -18,7 +12,7 @@ COPY Gemfile $APP_PATH
 COPY Gemfile.lock $APP_PATH
 
 WORKDIR $APP_PATH
-
+RUN gem update --system 3.2.3 && gem install bundler
 RUN bundle install
 
 COPY . $APP_PATH
